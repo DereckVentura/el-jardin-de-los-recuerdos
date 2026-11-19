@@ -8,7 +8,7 @@ Un herbario digital para guardar momentos de la vida cotidiana. Una tarde en el 
 
 - [Repositorio público](https://github.com/DereckVentura/el-jardin-de-los-recuerdos)
 - [README](https://github.com/DereckVentura/el-jardin-de-los-recuerdos/blob/main/README.md)
-- Sitio en Vercel pendiente de publicación.
+- [Sitio público en Vercel](https://el-jardin-de-los-recuerdos-seven.vercel.app)
 
 ## Recorrido por la pantalla principal
 
@@ -89,13 +89,14 @@ git add package.json .gitignore playwright.config.ts tests .github
 git commit -m "Verifico compilación y persistencia en escritorio y móvil"
 
 git add src/views/jardinView.ts
-git commit -m "Preciso el tipo del formulario de filtros para la compilación"
-
-git add .github/workflows/verificar.yml
-git commit -m "Fijo una versión de Ubuntu compatible con Playwright"
+git commit -m "Restauro los acentos y signos de la interfaz"
 
 git add README.md
 git commit -m "Documento el laboratorio y el recorrido de evaluación"
+
+# Tras verificar la publicación
+git add README.md
+git commit -m "Agrego el enlace público de Vercel al README"
 
 git push origin main
 ```
