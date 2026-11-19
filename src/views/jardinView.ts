@@ -10,13 +10,13 @@ export class Vista {
   constructor(readonly raiz: HTMLElement) {
     raiz.innerHTML = `<header class="barra"><div class="ancho marca"><span class="sello">${icono('hoja')}</span>Mi herbario</div></header>
       <div class="ancho contenido">
-        <section class="portada" aria-labelledby="principal"><div class="intro"><h1 id="principal">El jard�n de los recuerdos</h1>
-        <p>Cada recuerdo tiene una flor. Plant� los momentos que quer�s volver a visitar.</p>
+        <section class="portada" aria-labelledby="principal"><div class="intro"><h1 id="principal">El jardín de los recuerdos</h1>
+        <p>Cada recuerdo tiene una flor. Plantá los momentos que querés volver a visitar.</p>
         <button class="primario plantar" data-accion="plantar">${icono('mas')} Plantar un recuerdo</button></div>
-        <div id="pradera" class="pradera" aria-label="Flores de tu jard�n"></div></section>
-        <section aria-labelledby="coleccion"><div class="cabecera"><h2 id="coleccion">Mi jard�n</h2><span id="conteo" role="status"></span></div>
+        <div id="pradera" class="pradera" aria-label="Flores de tu jardín"></div></section>
+        <section aria-labelledby="coleccion"><div class="cabecera"><h2 id="coleccion">Mi jardín</h2><span id="conteo" role="status"></span></div>
         <form class="filtros" role="search"><label class="busqueda">${icono('buscar')}<input name="buscar" type="search" aria-label="Buscar recuerdos" placeholder="Buscar recuerdos"></label>
-        <label class="opcion"><span>Emoci�n</span><select name="emocion"><option value="">Todas</option>${opciones}</select></label>
+        <label class="opcion"><span>Emoción</span><select name="emocion"><option value="">Todas</option>${opciones}</select></label>
         <label class="opcion"><span>Mes</span><input name="mes" aria-label="Mes" type="month"></label>
         <button type="button" class="limpiar" data-accion="limpiar" hidden>Limpiar filtros</button></form>
         <div id="flores" class="cuadricula"></div></section></div>
@@ -30,14 +30,14 @@ export class Vista {
   limpiar() { this.raiz.querySelector<HTMLFormElement>('.filtros')!.reset() }
   jardin(todos: Recuerdo[], lista: Recuerdo[], animar?: number) {
     const muestra = todos.filter((r,i) => todos.findIndex(x => x.emocion===r.emocion)===i)
-    this.raiz.querySelector('#pradera')!.innerHTML = muestra.map((r,i) => `<button class="tallo t${i} ${animar===r.id?'crece':''}" data-id="${r.id}" aria-label="Abrir ${escapar(r.titulo)}, ${emociones[r.emocion]}" title="${escapar(r.titulo)} � ${emociones[r.emocion]}">${flor(r.emocion,true)}</button>`).join('')
+    this.raiz.querySelector('#pradera')!.innerHTML = muestra.map((r,i) => `<button class="tallo t${i} ${animar===r.id?'crece':''}" data-id="${r.id}" aria-label="Abrir ${escapar(r.titulo)}, ${emociones[r.emocion]}" title="${escapar(r.titulo)} · ${emociones[r.emocion]}">${flor(r.emocion,true)}</button>`).join('')
     const filtrando = Object.values(this.filtros()).some(Boolean)
     this.raiz.querySelector<HTMLElement>('.limpiar')!.hidden = !filtrando
     this.raiz.querySelector('#conteo')!.textContent = filtrando ? `${lista.length} de ${todos.length} recuerdos` : `${lista.length} ${lista.length===1?'recuerdo':'recuerdos'}`
     this.raiz.querySelector('#flores')!.innerHTML = lista.map(r => `<button class="ficha ${animar===r.id?'crece':''}" data-id="${r.id}">
       <span class="lamina e-${r.emocion}">${flor(r.emocion,true)}<span class="abrir">${icono('flecha')}</span></span>
       <span class="pie"><span class="tipo">${emociones[r.emocion]}</span><strong>${escapar(r.titulo)}</strong>
-      <span class="fecha">${fechaLarga(r.fecha)}</span></span></button>`).join('') || `<div class="vacio"><h3>${todos.length?'Ninguna flor coincide con tu b�squeda.':'Tu jard�n est� vac�o.'}</h3><p>${todos.length?'Prob� con otro mes, emoci�n o palabra.':'Planta tu primer recuerdo.'}</p></div>`
+      <span class="fecha">${fechaLarga(r.fecha)}</span></span></button>`).join('') || `<div class="vacio"><h3>${todos.length?'Ninguna flor coincide con tu búsqueda.':'Tu jardín está vacío.'}</h3><p>${todos.length?'Probá con otro mes, emoción o palabra.':'Planta tu primer recuerdo.'}</p></div>`
   }
   hoja(contenido:string) {
     this.dialogo.innerHTML = botonCerrar + contenido + '<p class="error" role="alert"></p>'
@@ -45,7 +45,7 @@ export class Vista {
     this.dialogo.querySelector<HTMLElement>('[data-inicio]')?.focus()
   }
   detalle(r: Recuerdo) {
-    this.hoja(`<div class="muestra e-${r.emocion}">${flor(r.emocion)}</div><p class="tipo">${emociones[r.emocion]} � ${escapar(r.categoria)}</p>
+    this.hoja(`<div class="muestra e-${r.emocion}">${flor(r.emocion)}</div><p class="tipo">${emociones[r.emocion]} · ${escapar(r.categoria)}</p>
       <h2 id="titulo-hoja" tabindex="-1" data-inicio>${escapar(r.titulo)}</h2><p class="fecha">${fechaLarga(r.fecha)}</p>
       <p class="relato">${escapar(r.texto)}</p><div class="acciones"><button data-accion="editar" class="primario">Editar recuerdo</button>
       <button data-accion="confirmar" class="secundario">Arrancar flor</button></div>`)
@@ -54,17 +54,17 @@ export class Vista {
     const hoy = new Date()
     const fecha = r?.fecha ?? [hoy.getFullYear(),String(hoy.getMonth()+1).padStart(2,'0'),String(hoy.getDate()).padStart(2,'0')].join('-')
     this.hoja(`<h2 id="titulo-hoja">${r?'Editar recuerdo':'Plantar un recuerdo'}</h2>
-      <form id="form-recuerdo"><label>T�tulo<input data-inicio required maxlength="100" name="titulo" placeholder="�C�mo llamar�as a este momento?" value="${escapar(r?.titulo??'')}"></label>
-      <label>Frase<textarea required maxlength="1600" name="texto" rows="3" placeholder="Lo que quer�s recordar.">${escapar(r?.texto??'')}</textarea></label>
+      <form id="form-recuerdo"><label>Título<input data-inicio required maxlength="100" name="titulo" placeholder="¿Cómo llamarías a este momento?" value="${escapar(r?.titulo??'')}"></label>
+      <label>Frase<textarea required maxlength="1600" name="texto" rows="3" placeholder="Lo que querés recordar…">${escapar(r?.texto??'')}</textarea></label>
       <div class="pareja"><label>Fecha<input required type="date" name="fecha" value="${escapar(fecha)}"></label>
-      <label>Emoci�n<select required name="emocion"><option value="">Eleg� una emoci�n</option>${opciones}</select></label></div>
-      <label>Categor�a<input required maxlength="60" name="categoria" placeholder="Por ejemplo, familia" value="${escapar(r?.categoria??'')}"></label>
+      <label>Emoción<select required name="emocion"><option value="">Elegí una emoción</option>${opciones}</select></label></div>
+      <label>Categoría<input required maxlength="60" name="categoria" placeholder="Por ejemplo, familia" value="${escapar(r?.categoria??'')}"></label>
       <div class="acciones"><button class="primario" type="submit">${r?'Guardar cambios':'Plantar recuerdo'}</button>
       <button class="secundario" type="button" data-accion="cerrar">Cancelar</button></div></form>`)
     this.dialogo.querySelector<HTMLSelectElement>('[name="emocion"]')!.value = r?.emocion ?? ''
   }
   confirmar(r: Recuerdo) {
-    this.hoja(`<h2 id="titulo-hoja">�Arrancar esta flor?</h2><p>Se eliminar� �${escapar(r.titulo)}� de tu jard�n. Esta acci�n es definitiva.</p>
+    this.hoja(`<h2 id="titulo-hoja">¿Arrancar esta flor?</h2><p>Se eliminará «${escapar(r.titulo)}» de tu jardín. Esta acción es definitiva.</p>
       <div class="acciones"><button class="secundario" data-inicio data-accion="volver">Cancelar</button><button class="peligro" data-accion="arrancar">Arrancar esta flor</button></div>`)
   }
   datos(form: HTMLFormElement) {
